@@ -6,30 +6,27 @@ Created on Mon Sep 23 18:10:21 2019
 """
 
 import tkinter as tk
-
-
+from student import Student
 window = tk.Tk()
 
-#menuframe = tk.Frame(window)
-#menuframe.pack()
-menubar = tk.Menu(window)
-window.config(menu = menubar)
 
+class LoginPage:
+    def __init__(self,master):
+        self.master = master
+    
+    def login_lable(self):
+        print('i am here')
+        self.username = tk.Label(self.master , text = "Username: ")
+        self.username.grid(row = 0 , column = 0)
+        self.usern = tk.Entry(self.master)
+        self.usern.grid(row=0, column=1, sticky=tk.E)
+        self.passward = tk.Label(self.master , text = "Password: ")
+        self.passward.grid(row = 1 , column = 0)
+        self.passn = tk.Entry(self.master)
+        self.passn.grid(row=2, column=1, sticky=tk.E)
+        self.login = tk.Button(self.master,text="log in")
+        self.login.grid(row = 3 , column = 0)
 
-subMenu = tk.Menu(menubar , tearoff = 0)
-menubar.add_cascade(label = 'Instructor',menu = subMenu)
-subMenu.add_command(label = 'Add Student')
-subMenu.add_command(label = 'Edit Student')
-
-
-subMenu = tk.Menu(menubar , tearoff = 0)
-menubar.add_cascade(label = 'Student')
-subMenu.add_command(label = 'Track Me')
-subMenu.add_command(label = 'Ask Questions')
-
-
-Attendence = tk.Frame(window)
-Attendence.pack()
 
 class Roll_number:
 
@@ -40,7 +37,7 @@ class Roll_number:
         self.col = (roll) % 10 
         self.clicked = False
     def add_but(self):
-        print(self.roll , self.row,self.col)
+        
         if not self.clicked:
             self.Button1 = tk.Button(self.master, text="   {}   ".format(str(self.roll)), command = self.change_color,bg="Black", fg="White")
             
@@ -57,10 +54,36 @@ class Roll_number:
         else:
             self.clicked = False
             self.add_but()
-        
-        
 
-for i in range(1,67):
-    cap = Roll_number(Attendence , i)
-    cap.add_but()
+class MainWndow:
+    def __init__(self,window):
+        self.window = window
+        self.Attendence = tk.Frame(window)
+        self.Attendence.pack()
+        self.menubar = tk.Menu(window)
+        window.config(menu = self.menubar)
+        
+        subMenu = tk.Menu(self.menubar , tearoff = 0)
+        self.menubar.add_cascade(label = 'Instructor',menu = subMenu)
+        subMenu.add_command(label = 'Add Student')
+        subMenu.add_command(label = 'Edit Student')
+        
+        
+        subMenu2 = tk.Menu(self.menubar , tearoff = 0)
+        self.menubar.add_cascade(label = 'Student',menu = subMenu)
+        subMenu2.add_command(label = 'Track Me')
+        subMenu2.add_command(label = 'Ask Questions')
+
+    def add_student(self):
+        for i in range(1,67):
+            cap = Roll_number(self.Attendence , i)
+            cap.add_but()
+            
+    def submit_attendence(self):
+        pass
+
+    
+
+mainwin = MainWndow(window)
+mainwin.add_student()
 window.mainloop()
