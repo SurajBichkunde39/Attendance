@@ -11,6 +11,10 @@ window = tk.Tk()
 
 
 class LoginPage:
+    '''
+    i am not sure about the exact use of this class 
+    master is the frame , i am going to lift this on the top of mainwin
+    '''
     def __init__(self,master):
         self.master = master
     
@@ -29,12 +33,15 @@ class LoginPage:
 
 
 class Roll_number:
-
-    def __init__(self,frame,roll):
+    '''
+    this is roll_number button every student is associated with this class
+    '''
+    def __init__(self,frame,stud):
         self.master = frame
-        self.roll = roll
-        self.row = int((roll) /10)
-        self.col = (roll) % 10 
+        self.stud = stud
+        self.roll = stud.roll_no
+        self.row = int((self.roll) /10)
+        self.col = (self.roll) % 10 
         self.clicked = False
     def add_but(self):
         
@@ -73,17 +80,43 @@ class MainWndow:
         self.menubar.add_cascade(label = 'Student',menu = subMenu)
         subMenu2.add_command(label = 'Track Me')
         subMenu2.add_command(label = 'Ask Questions')
+        self.submit_button()
 
-    def add_student(self):
-        for i in range(1,67):
-            cap = Roll_number(self.Attendence , i)
-            cap.add_but()
+    def add_student(self , stud):
+        cap = Roll_number(self.Attendence , stud)
+        cap.add_but()
+    
             
+    def submit_button(self):
+        self.submit = tk.Button(self.window, text="   submit   ",command = self.submit_attendence,bg="green", fg="white")
+        self.submit.pack()
+    
     def submit_attendence(self):
         pass
 
-    
 
+class Solution(object):
+    '''
+    solution class will note down todays attendence and add it to one csv file
+    csv structure will be -> date , present_roll_numbers(csv)
+    '''
+    def __init__(self , mainwin):
+        self.mainwin = mainwin
+    
+    def add_student_with_csv(self,csv_filename):
+        all_data = []
+        with open(csv_filename) as f:
+            all_data = f.readlines()
+    
+        for i in range(1,len(all_data)):
+            roll,f_name,l_name,dob,mail = all_data[i].split(',')
+            std = Student(roll,f_name,l_name,date_of_birth = dob , email = mail)
+            self.mainwin.add_student(std)
+    
+   
+    
+    
 mainwin = MainWndow(window)
-mainwin.add_student()
+sol = Solution(mainwin)
+sol.add_student_with_csv('students_info.txt')
 window.mainloop()

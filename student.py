@@ -10,7 +10,7 @@ class Student:
     def __init__(self,roll_no,first_name,last_name,**kwarg):
         self.first_name = first_name
         self.last_name = last_name
-        self.roll_no = roll_no
+        self.roll_no = int(roll_no)
         self.email = None
         self.date_of_birth = None
         self.age = None
@@ -24,10 +24,17 @@ class Student:
         self.email = mail
         
     def set_date_of_birth(self,str1):
+        year = month = day = None
+        print(str1)
         if '/' in str1:
             year , month , day = str1.split('/')
+        elif '\\' in str1:
+            year , month , day = str1.split('\\')
         elif '-' in str1:
-            year , month , day = str1.split('/')
+            year , month , day = str1.split('-')
+        year = int(year)
+        month = int(month)
+        day = int(day)
         self.date_of_birth = datetime.datetime(int(year),int(month),int(day))
         self.age = self.get_age()
 
@@ -50,10 +57,10 @@ class Student:
 if __name__ == '__main__':
     std1 = Student(1,'suraj','bichkunde')
     std2 = Student(2,'Kapil', 'Sharma',email = 'ssbwork39', date_of_birth = '1999/09/19')
-    std1.print_everthing()
     std2.print_everthing()
-
-        
+    std1.set_date_of_birth('2000/1/1')
+    std1.print_everthing()
     
 
+        
         
