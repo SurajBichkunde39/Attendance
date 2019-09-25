@@ -9,6 +9,8 @@ import tkinter as tk
 from student import Student
 window = tk.Tk()
 
+global todays_attendance
+todays_attendance = []
 
 class LoginPage:
     '''
@@ -55,12 +57,15 @@ class Roll_number:
         
         
     def change_color(self):
+        global todays_attendance
         if not self.clicked:
             self.clicked = True
             self.add_but()
+            todays_attendance.append(self.roll)
         else:
             self.clicked = False
             self.add_but()
+            todays_attendance.remove(self.roll)
 
 class MainWndow:
     def __init__(self,window):
@@ -92,7 +97,9 @@ class MainWndow:
         self.submit.pack()
     
     def submit_attendence(self):
-        pass
+        global todays_attendance
+        todays_attendance.sort()
+        print(todays_attendance)
 
 
 class Solution(object):
