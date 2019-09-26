@@ -119,10 +119,7 @@ class Solution(object):
             roll,f_name,l_name,dob,mail = all_data[i].split(',')
             std = Student(roll,f_name,l_name,date_of_birth = dob , email = mail)
             self.mainwin.add_student(std)
-    
-   
-    
-    
+        
 mainwin = MainWndow(window)
 sol = Solution(mainwin)
 sol.add_student_with_csv('students_info.txt')
