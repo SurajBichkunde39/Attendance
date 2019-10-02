@@ -6,42 +6,14 @@ Created on Mon Sep 23 18:10:21 2019
 """
 
 import tkinter as tk
-from student import Student
-window = tk.Tk()
-
+root = tk.Tk()
 global todays_attendance
 todays_attendance = []
 
-class LoginPage:
-    '''
-    i am not sure about the exact use of this class 
-    master is the frame , i am going to lift this on the top of mainwin
-    '''
-    def __init__(self,master):
-        self.master = master
-    
-    def login_lable(self):
-        print('i am here')
-        self.username = tk.Label(self.master , text = "Username: ")
-        self.username.grid(row = 0 , column = 0)
-        self.usern = tk.Entry(self.master)
-        self.usern.grid(row=0, column=1, sticky=tk.E)
-        self.passward = tk.Label(self.master , text = "Password: ")
-        self.passward.grid(row = 1 , column = 0)
-        self.passn = tk.Entry(self.master)
-        self.passn.grid(row=2, column=1, sticky=tk.E)
-        self.login = tk.Button(self.master,text="log in")
-        self.login.grid(row = 3 , column = 0)
-
-
 class Roll_number:
-    '''
-    this is roll_number button every student is associated with this class
-    '''
-    def __init__(self,frame,stud):
+    def __init__(self,frame,roll):
         self.master = frame
-        self.stud = stud
-        self.roll = stud.roll_no
+        self.roll = roll
         self.row = int((self.roll) /10)
         self.col = (self.roll) % 10 
         self.clicked = False
@@ -53,7 +25,7 @@ class Roll_number:
         else:
             self.Button1 = tk.Button(self.master, text="   {}   ".format(str(self.roll)), command = self.change_color,bg="red", fg="White")
         self.Button1.grid(row=self.row, column=self.col)
-        self.Button1.config(height =2, width = 3)
+        self.Button1.config(height =3, width = 5)
         
         
     def change_color(self):
@@ -67,60 +39,92 @@ class Roll_number:
             self.add_but()
             todays_attendance.remove(self.roll)
 
-class MainWndow:
-    def __init__(self,window):
-        self.window = window
-        self.Attendence = tk.Frame(window)
-        self.Attendence.pack()
-        self.menubar = tk.Menu(window)
-        window.config(menu = self.menubar)
-        
+
+class MainView(object):
+    def __init__(self,root):
+        self.root = root
+        self.buttonFrame = tk.Frame(root)
+        self.container    = tk.Frame(root)
+        self.buttonFrame.pack(side = 'top',fill = 'x',expand = False)
+        self.container.pack(side = 'top',fill = 'both',expand = True)
+
+        self.login_frame = tk.Frame(root) 
+        self.select_sub_frame = tk.Frame(root)
+        self.attendence_frame = tk.Frame(root)
+        self.graph_frame = tk.Frame(root)
+
+        self.login_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+        self.select_sub_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+        self.attendence_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+        self.graph_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+
+        self.roll_numbers_frame = tk.Frame(self.attendence_frame)
+        self.subbmit_button_frame = tk.Frame(self.attendence_frame)
+        self.roll_numbers_frame.pack(side="top", fill="both", expand=True)
+        self.subbmit_button_frame.pack(side="top")
+        # self.subbmit_button_frame.place(in_=self.attendence_frame, x=0, y=0, relwidth=1, relheight=1)
+        #self.subbmit_button_frame.pack()
+
+    def fill_button_frame(self):
+        # b1 = tk.Button(self.graph_frame , text = )
+        pass
+
+    def add_menubar(self):
+        self.menubar = tk.Menu(self.root)
+        self.root.config(menu = self.menubar)
         subMenu = tk.Menu(self.menubar , tearoff = 0)
         self.menubar.add_cascade(label = 'Instructor',menu = subMenu)
         subMenu.add_command(label = 'Add Student')
         subMenu.add_command(label = 'Edit Student')
-        
-        
+
         subMenu2 = tk.Menu(self.menubar , tearoff = 0)
-        self.menubar.add_cascade(label = 'Student',menu = subMenu)
+        self.menubar.add_cascade(label = 'Student',menu = subMenu2)
         subMenu2.add_command(label = 'Track Me')
         subMenu2.add_command(label = 'Ask Questions')
-        self.submit_button()
 
-    def add_student(self , stud):
-        cap = Roll_number(self.Attendence , stud)
-        cap.add_but()
+        subMenu3 = tk.Menu(self.menubar , tearoff = 0)
+        self.menubar.add_cascade(label = 'Summary',menu = subMenu3)
+        subMenu3.add_command(label = 'Weekly Report')
+        subMenu3.add_command(label = 'Monthly Report')
+
+        b0 = tk.Button(self.buttonFrame, text="take_attendence" , command = self.take_attendence_action)
+        b0.pack(side = 'left')
     
-            
-    def submit_button(self):
-        self.submit = tk.Button(self.window, text="   submit   ",command = self.submit_attendence,bg="green", fg="white")
-        self.submit.pack()
-    
-    def submit_attendence(self):
+    def take_attendence_action(self):
+        self.buttonFrame.pack_forget()
+        self.select_sub_frame.lift()
+
+    def add_subject_button(self , sub_name):
+        b1 = tk.Button(self.select_sub_frame, text=sub_name, command=self.attendence_frame.lift)
+        b1.pack(side="top", fill="both", expand=True)
+
+    def add_sub_from_str(self,sub_str):
+        sub_lst  = sub_str.split(',')
+        for item in sub_lst:
+            self.add_subject_button(item)
+
+    def add_subbmit_but(self):
+        sub_but = tk.Button(self.subbmit_button_frame,text = "Subbmit",command = self.get_todays_attendence)
+        sub_but.pack(side="top", fill="both", expand=True)
+
+    def add_attendence_sheet(self , number_of_student):
+        for i in range(1,number_of_student+1):
+            cap = Roll_number(self.roll_numbers_frame,i)
+            cap.add_but()
+        self.add_subbmit_but()
+
+    def get_todays_attendence(self):
         global todays_attendance
         todays_attendance.sort()
-        print(todays_attendance)
+        todays_attendance_copy = [str(x) for x in todays_attendance]
+        csv_attn = ','.join(todays_attendance_copy)
+        print(csv_attn)
+        self.root.destroy()
 
-
-class Solution(object):
-    '''
-    solution class will note down todays attendence and add it to one csv file
-    csv structure will be -> date , present_roll_numbers(csv)
-    '''
-    def __init__(self , mainwin):
-        self.mainwin = mainwin
-    
-    def add_student_with_csv(self,csv_filename):
-        all_data = []
-        with open(csv_filename) as f:
-            all_data = f.readlines()
-    
-        for i in range(1,len(all_data)):
-            roll,f_name,l_name,dob,mail = all_data[i].split(',')
-            std = Student(roll,f_name,l_name,date_of_birth = dob , email = mail)
-            self.mainwin.add_student(std)
-        
-mainwin = MainWndow(window)
-sol = Solution(mainwin)
-sol.add_student_with_csv('students_info.txt')
-window.mainloop()
+window = MainView(root)
+root.geometry('450x480')
+window.add_menubar()
+sub_str = 'SEPM,ISEE,TOC,CN,DBMS'
+window.add_sub_from_str(sub_str)
+window.add_attendence_sheet(16)
+root.mainloop()
