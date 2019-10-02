@@ -64,10 +64,54 @@ class MainView(object):
         self.subbmit_button_frame.pack(side="top")
         # self.subbmit_button_frame.place(in_=self.attendence_frame, x=0, y=0, relwidth=1, relheight=1)
         #self.subbmit_button_frame.pack()
+        self.fill_button_frame()
 
     def fill_button_frame(self):
-        # b1 = tk.Button(self.graph_frame , text = )
-        pass
+        self.take_frame = tk.Frame(self.buttonFrame)
+        self.report_frame = tk.Frame(self.buttonFrame)
+        self.info_frame = tk.Frame(self.buttonFrame)
+        self.add_frame = tk.Frame(self.buttonFrame)
+        self.sved_data = tk.Frame(self.buttonFrame)
+        
+        self.take_frame.pack()
+        self.report_frame.pack()
+        self.info_frame.pack()
+        self.add_frame.pack()
+        self.sved_data.pack()
+        
+        bl = tk.Label(self.take_frame , text = 'Subbmit Attendence to Database' , bg= 'white', foreground = "red")
+        bl.pack(side="top", fill="both", expand=True)
+        b0 = tk.Button(self.take_frame, text="take_attendence" , command = self.take_attendence_action)
+        b0.pack(side = 'left')
+        b10 = tk.Button(self.take_frame, text="Add_attendence_to_given_date")
+        b10.pack(side = 'left')
+        
+        b1l = tk.Label(self.report_frame , text = 'Visualise Report' , bg= 'white', foreground = "red")
+        b1l.pack(side="top", fill="both", expand=True)
+        #b1 = tk.Button(self.report_frame , text = "Monthly Report")
+        #b1.pack(side = "left")
+        b1 = tk.Button(self.report_frame , text = "Sub_wise_weekly_report")
+        b1.pack(side = "left")
+        b2 = tk.Button(self.report_frame , text = "Sub_wise_monthly_report")
+        b2.pack(side = "left")
+        
+        
+        b2l = tk.Label(self.add_frame , text = 'Get Info' , bg= 'white', foreground = "red")
+        b2l.pack(side="top", fill="both", expand=True)
+        b3 = tk.Button(self.add_frame , text = "get_student_info")
+        b3.pack(side = "left")
+        b3 = tk.Button(self.add_frame , text = "Check_Attendence_of_given_day")
+        b3.pack(side = "left")
+        
+        b3l = tk.Label(self.sved_data , text = 'From Database' , bg= 'white', foreground = "red")
+        b3l.pack(side="top", fill="both", expand=True)
+        b4 = tk.Button(self.sved_data , text = "Add_Student")
+        b4.pack(side = "left")
+        b5 = tk.Button(self.sved_data , text = "Remove_Student")
+        b5.pack(side = "left")
+        b6 = tk.Button(self.sved_data , text = "Edit_student")
+        b6.pack(side = "left")
+
 
     def add_menubar(self):
         self.menubar = tk.Menu(self.root)
@@ -86,9 +130,6 @@ class MainView(object):
         self.menubar.add_cascade(label = 'Summary',menu = subMenu3)
         subMenu3.add_command(label = 'Weekly Report')
         subMenu3.add_command(label = 'Monthly Report')
-
-        b0 = tk.Button(self.buttonFrame, text="take_attendence" , command = self.take_attendence_action)
-        b0.pack(side = 'left')
     
     def take_attendence_action(self):
         self.buttonFrame.pack_forget()
