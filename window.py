@@ -52,7 +52,7 @@ class MainView(object):
         self.select_sub_frame = tk.Frame(root)
         self.attendence_frame = tk.Frame(root)
         self.graph_frame = tk.Frame(root)
-
+        
         self.login_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
         self.select_sub_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
         self.attendence_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
@@ -62,20 +62,114 @@ class MainView(object):
         self.subbmit_button_frame = tk.Frame(self.attendence_frame)
         self.roll_numbers_frame.pack(side="top", fill="both", expand=True)
         self.subbmit_button_frame.pack(side="top")
-        # self.subbmit_button_frame.place(in_=self.attendence_frame, x=0, y=0, relwidth=1, relheight=1)
-        #self.subbmit_button_frame.pack()
         self.fill_button_frame()
+
+    def create_add_student_frame(self):
+        self.add_student_frame = tk.Frame(root)
+        self.add_student_frame.place(in_ = self.container , x=0 , y =0 ,relwidth = 1,relheight=1)
+        
+        tk.Label(self.add_student_frame,text = "Roll_number").grid(row = 0)
+        tk.Label(self.add_student_frame,text = "First Name").grid(row = 1)
+        tk.Label(self.add_student_frame,text = "Last Name").grid(row = 2)
+        tk.Label(self.add_student_frame,text = "Mail id").grid(row = 3)
+        tk.Label(self.add_student_frame,text = "date_of_Birth").grid(row = 4)
+
+        self.e0 = tk.Entry(self.add_student_frame)
+        self.e1 = tk.Entry(self.add_student_frame)
+        self.e2 = tk.Entry(self.add_student_frame)
+        self.e3 = tk.Entry(self.add_student_frame)
+        self.e4 = tk.Entry(self.add_student_frame)
+
+        self.e0.grid(row = 0,column = 1)
+        self.e1.grid(row = 1,column = 1)
+        self.e2.grid(row = 2,column = 1)
+        self.e3.grid(row = 3,column = 1)
+        self.e4.grid(row = 4,column = 1)
+
+        done_button = tk.Button(self.add_student_frame , text = 'ADD' , command = self.add_stud_Action)
+        quit_button = tk.Button(self.add_student_frame , text = 'Quit' , command = self.add_student_frame.destroy)
+        done_button.grid(row = 5 , column = 0)
+        quit_button.grid(row = 5, column = 1)
+
+    def create_remove_student_frame(self):
+        self.Remove_student_frame = tk.Frame(root)
+        self.Remove_student_frame.place(in_ = self.container , x=0 , y =0 ,relwidth = 1,relheight=1)
+
+        tk.Label(self.Remove_student_frame , text = 'Enetr Roll_number').grid(row = 1)
+        self.e0 = tk.Entry(self.Remove_student_frame)
+        self.e0.grid(row =  1 , column = 1)
+
+        remove_button = tk.Button(self.Remove_student_frame , text  = 'Remove' , command = self.remove_stud_Action)
+        quit_button = tk.Button(self.Remove_student_frame , text = 'Quit' , command = self.Remove_student_frame.destroy)
+        remove_button.grid(row = 2 , column = 0)
+        quit_button.grid(row = 2 , column = 1)
+
+        
+    def create_edit_student_frame(self):
+        self.edit_student_frame = tk.Frame(root)
+        self.edit_student_frame.place(in_ = self.container , x=0 , y =0 ,relwidth = 1,relheight=1)
+
+        tk.Label(self.edit_student_frame,text = "Roll_number").grid(row = 0)
+        tk.Label(self.edit_student_frame,text = "First Name").grid(row = 1)
+        tk.Label(self.edit_student_frame,text = "Last Name").grid(row = 2)
+        tk.Label(self.edit_student_frame,text = "Mail id").grid(row = 3)
+        tk.Label(self.edit_student_frame,text = "date_of_Birth").grid(row = 4)
+
+        self.e0 = tk.Entry(self.edit_student_frame)
+        self.e1 = tk.Entry(self.edit_student_frame)
+        self.e2 = tk.Entry(self.edit_student_frame)
+        self.e3 = tk.Entry(self.edit_student_frame)
+        self.e4 = tk.Entry(self.edit_student_frame)
+
+        self.e0.grid(row = 0,column = 1)
+        self.e1.grid(row = 1,column = 1)
+        self.e2.grid(row = 2,column = 1)
+        self.e3.grid(row = 3,column = 1)
+        self.e4.grid(row = 4,column = 1)
+
+        edit_button =  tk.Button(self.edit_student_frame , text  = 'Edit' , command = self.edit_stud_Action)
+        quit_button = tk.Button(self.edit_student_frame , text = 'Quit' , command = self.edit_student_frame.destroy)
+        edit_button.grid(row = 5 , column = 0)
+        quit_button.grid(row = 5, column = 1)
+        
+
+    def edit_stud_Action(self):
+        roll_no = self.e0.get()
+        first = self.e1.get()
+        last = self.e2.get()
+        mail = self.e3.get()
+        dob = self.e3.get()
+        #will go for database action here
+        print(roll_no,first,last,mail,dob)
+        self.edit_student_frame.destroy()
+
+
+    def remove_stud_Action(self):
+        #will go for database action here
+        roll_no = self.e0.get()
+        print(roll_no)
+        self.Remove_student_frame.destroy()
+
+    def add_stud_Action(self):
+        roll_no = self.e0.get()
+        first = self.e1.get()
+        last = self.e2.get()
+        mail = self.e3.get()
+        dob = self.e3.get()
+        #will go for database action here
+        print(roll_no,first,last,mail,dob)
+        self.add_student_frame.destroy()
 
     def fill_button_frame(self):
         self.take_frame = tk.Frame(self.buttonFrame)
         self.report_frame = tk.Frame(self.buttonFrame)
-        self.info_frame = tk.Frame(self.buttonFrame)
+        # self.info_frame = tk.Frame(self.buttonFrame)
         self.add_frame = tk.Frame(self.buttonFrame)
         self.sved_data = tk.Frame(self.buttonFrame)
         
         self.take_frame.pack()
         self.report_frame.pack()
-        self.info_frame.pack()
+        # self.info_frame.pack()
         self.add_frame.pack()
         self.sved_data.pack()
         
@@ -88,30 +182,39 @@ class MainView(object):
         
         b1l = tk.Label(self.report_frame , text = 'Visualise Report' , bg= 'white', foreground = "red")
         b1l.pack(side="top", fill="both", expand=True)
-        #b1 = tk.Button(self.report_frame , text = "Monthly Report")
-        #b1.pack(side = "left")
-        b1 = tk.Button(self.report_frame , text = "Sub_wise_weekly_report")
+        b1 = tk.Button(self.report_frame , text = "Sub_wise_weekly_report" , command = self.Sub_wise_weekly_report_Action)
         b1.pack(side = "left")
-        b2 = tk.Button(self.report_frame , text = "Sub_wise_monthly_report")
+        b2 = tk.Button(self.report_frame , text = "Sub_wise_monthly_report" , command = self.Sub_wise_monthly_report_Action)
         b2.pack(side = "left")
         
         
         b2l = tk.Label(self.add_frame , text = 'Get Info' , bg= 'white', foreground = "red")
         b2l.pack(side="top", fill="both", expand=True)
-        b3 = tk.Button(self.add_frame , text = "get_student_info")
+        b3 = tk.Button(self.add_frame , text = "get_student_info" , command = self.get_student_info_Action)
         b3.pack(side = "left")
-        b3 = tk.Button(self.add_frame , text = "Check_Attendence_of_given_day")
+        b3 = tk.Button(self.add_frame , text = "Check_Attendence_of_given_day" , command = self.Check_Attendence_of_given_day_Action)
         b3.pack(side = "left")
         
         b3l = tk.Label(self.sved_data , text = 'From Database' , bg= 'white', foreground = "red")
         b3l.pack(side="top", fill="both", expand=True)
-        b4 = tk.Button(self.sved_data , text = "Add_Student")
+        b4 = tk.Button(self.sved_data , text = "Add_Student" , command = self.add_Student_Action)
         b4.pack(side = "left")
-        b5 = tk.Button(self.sved_data , text = "Remove_Student")
+        b5 = tk.Button(self.sved_data , text = "Remove_Student" , command = self.Remove_Student_Action)
         b5.pack(side = "left")
-        b6 = tk.Button(self.sved_data , text = "Edit_student")
+        b6 = tk.Button(self.sved_data , text = "Edit_student" , command = self.Edit_student_Action)
         b6.pack(side = "left")
 
+    def Edit_student_Action(self):
+        self.create_edit_student_frame()
+        self.edit_student_frame.lift()
+
+    def Remove_Student_Action(self):
+        self.create_remove_student_frame()
+        self.Remove_student_frame.lift()
+
+    def add_Student_Action(self):
+        self.create_add_student_frame()
+        self.add_student_frame.lift()
 
     def add_menubar(self):
         self.menubar = tk.Menu(self.root)
@@ -161,6 +264,72 @@ class MainView(object):
         csv_attn = ','.join(todays_attendance_copy)
         print(csv_attn)
         self.root.destroy()
+
+    def get_student_info_Action(self):
+        self.info_frame = tk.Frame(root)
+        self.info_frame.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+
+        tk.Label(self.info_frame , text = 'Enetrt Roll Number').grid(row = 0)
+        self.e1 = tk.Entry(self.info_frame)
+        self.e1.grid(row = 0,column = 1)
+
+        search_button = tk.Button(self.info_frame , text = "Search" , command = self.search_Action)
+        search_button.grid(row = 1,column = 0)
+        quit_button = tk.Button(self.info_frame , text = 'Quit' , command = self.info_frame.destroy)
+        quit_button.grid(row = 1 , column = 1)
+
+
+    def search_Action(self):
+        roll = self.e1.get()
+        #will go for database action here
+        first_name = 'XXXX'
+        last_name = 'XXXX'
+        mail = 'XXXX'
+        dob = 'XXXX'
+
+        info = tk.Toplevel(root)
+        tk.Label(info , text = 'Roll Number').grid(row = 0 , column = 0)
+        tk.Label(info , text = roll).grid(row = 0 , column  = 1)
+        tk.Label(info , text = 'First Name').grid(row = 1 , column = 0)
+        tk.Label(info , text = first_name).grid(row = 1 , column  = 1)
+        tk.Label(info , text = 'Last Name').grid(row = 2 , column = 0)
+        tk.Label(info , text = last_name).grid(row = 2 , column  = 1)
+        tk.Label(info , text = 'Mail Id').grid(row = 3 , column = 0)
+        tk.Label(info , text = mail).grid(row = 3 , column  = 1)
+        tk.Label(info , text = 'Date of Birth').grid(row = 4 , column = 0)
+        tk.Label(info , text = dob).grid(row = 4 , column  = 1)
+
+    def Check_Attendence_of_given_day_Action(self):
+        self.get_date_frame = tk.Frame(root)
+        self.get_date_frame.place(in_ = self.container , x=0, y=0, relwidth=1, relheight=1)
+
+        tk.Label(self.get_date_frame , text = 'Eneter the date for you want Attendence(yyyy-mm-dd)').grid(row = 0)
+        self.e1 = tk.Entry(self.get_date_frame)
+        self.e1.grid(row = 1,column = 0)
+
+        search_Date = tk.Button(self.get_date_frame , text = "Search" , command = self.search_Date_Action)
+        search_Date.grid(row = 2,column = 0)
+        quit_button = tk.Button(self.get_date_frame , text = 'Quit' , command = self.get_date_frame.destroy)
+        quit_button.grid(row = 3 , column = 0)
+
+    def search_Date_Action(self):
+        #will go for database action here
+        pass
+
+
+    def Sub_wise_weekly_report_Action(self):
+        #will go for database action here
+        pass
+
+
+    def Sub_wise_monthly_report_Action(self):
+        #will go for database action here
+        pass
+
+
+
+
+
 
 window = MainView(root)
 root.geometry('450x480')
