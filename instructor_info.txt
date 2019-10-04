@@ -1,0 +1,6 @@
+Ins_id,First_name,Last_name,edu,sub_id
+101,Stive,Rojers,Ph.D,1
+102,Tony,Stark,Ph.D,2
+103,Thor,God_of_thunder,MA,3
+104,Clint,Barton,Ph.D,4
+105,Bruse,Baner,Ph.D,5

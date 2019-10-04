@@ -1,0 +1,6 @@
+sub_id,sub_name
+1,CN
+2,SEPM
+3,TOC
+4,ISEE
+5,DBMS

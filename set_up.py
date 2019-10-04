@@ -41,13 +41,30 @@ class Database(object):
 
     def add_students_with_csv(self,filename):
         df = pd.read_csv(filename)
-        if self.table_not_present():
-            self.create_tables()
         for index,row in df.iterrows():
+            print(row)
             self.add_student(row['roll_no'],row['first_name'],row['last_name'],row['date_of_birth'],row['email'])
             
+    def add_instructor_with_csv(self,filename):
+        df = pd.read_csv(filename)
+        for index , row in df.iterrows():
+            self.add_instructor(row['Ins_id'],row['First_name'],row['Last_name'],row['edu'],row['sub_id'])
+
+    def add_subject_with_csv(self,filename):
+        df = pd.read_csv(filename)
+        for index , row in df.iterrows():
+            self.add_subject(row['sub_id'],row['sub_name'])
+
+    def add_subject(self , sub_id , sub_name):
+        self.mycursor.execute("INSERT INTO subject VALUES (%s,%s)",(sub_id,sub_name))
+        self.mydb.commit()
+
+    def add_instructor(self,Ins_id,First_name,Last_name,edu,sub_id):
+        self.mycursor.execute("INSERT INTO instructor VALUES (%s,%s,%s,%s,%s)",(Ins_id,First_name,Last_name,edu,sub_id))
+        self.mydb.commit()
+            
     def add_student(self,roll_no,first_name,last_name,dob,mail):
-        #print(roll_no,first_name,last_name,dob,mail)
+        print(roll_no,first_name,last_name,dob,mail)
         self.mycursor.execute("INSERT INTO student VALUES(%s,%s,%s,%s,%s)",(roll_no,first_name,last_name,dob,mail))
         self.mydb.commit()
     
@@ -57,8 +74,24 @@ class Database(object):
         for item in self.mycursor:
             print(item)
 
+    def show_all_subject(self):
+        self.mycursor.execute('SELECT * FROM subject')
+        for item in self.mycursor:
+            print(item)
+
+    def show_all_instructor(self):
+        self.mycursor.execute('SELECT * FROM instructor')
+        for item in self.mycursor:
+            print(item)
+
+
 #testing
 if __name__ == '__main__':
     db = Database()
+    db.create_tables()
     db.add_students_with_csv('students_info.txt')
+    db.add_subject_with_csv('subject_info.txt')
+    db.add_instructor_with_csv('instructor_info.txt')
     db.show_all_student()
+    db.show_all_instructor()
+    db.show_all_subject()
