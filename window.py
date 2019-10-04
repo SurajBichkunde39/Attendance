@@ -6,9 +6,11 @@ Created on Mon Sep 23 18:10:21 2019
 """
 
 import tkinter as tk
-root = tk.Tk()
+from processing import Processing
+global selected_sub
 global todays_attendance
 todays_attendance = []
+selected_sub = None
 
 class Roll_number:
     def __init__(self,frame,roll):
@@ -42,6 +44,7 @@ class Roll_number:
 
 class MainView(object):
     def __init__(self,root):
+        self.process = Processing()
         self.root = root
         self.buttonFrame = tk.Frame(root)
         self.container    = tk.Frame(root)
@@ -175,17 +178,14 @@ class MainView(object):
         
         bl = tk.Label(self.take_frame , text = 'Subbmit Attendence to Database' , bg= 'white', foreground = "red")
         bl.pack(side="top", fill="both", expand=True)
-        b0 = tk.Button(self.take_frame, text="take_attendence" , command = self.take_attendence_action)
+        b0 = tk.Button(self.take_frame, text="take_todays_attendence" , command = self.take_attendence_action)
         b0.pack(side = 'left')
-        b10 = tk.Button(self.take_frame, text="Add_attendence_to_given_date")
-        b10.pack(side = 'left')
         
         b1l = tk.Label(self.report_frame , text = 'Visualise Report' , bg= 'white', foreground = "red")
         b1l.pack(side="top", fill="both", expand=True)
-        b1 = tk.Button(self.report_frame , text = "Sub_wise_weekly_report" , command = self.Sub_wise_weekly_report_Action)
+        b1 = tk.Button(self.report_frame , text = "Sub_wise_report" , command = self.Sub_wise_report_Action)
         b1.pack(side = "left")
-        b2 = tk.Button(self.report_frame , text = "Sub_wise_monthly_report" , command = self.Sub_wise_monthly_report_Action)
-        b2.pack(side = "left")
+        
         
         
         b2l = tk.Label(self.add_frame , text = 'Get Info' , bg= 'white', foreground = "red")
@@ -238,14 +238,43 @@ class MainView(object):
         self.buttonFrame.pack_forget()
         self.select_sub_frame.lift()
 
-    def add_subject_button(self , sub_name):
-        b1 = tk.Button(self.select_sub_frame, text=sub_name, command=self.attendence_frame.lift)
-        b1.pack(side="top", fill="both", expand=True)
+    def select_sub_frame_Action1(self):
+        global selected_sub
+        selected_sub = 1
+        self.attendence_frame.lift()
 
+    def select_sub_frame_Action2(self):
+        global selected_sub
+        selected_sub = 2
+        self.attendence_frame.lift()
+
+    def select_sub_frame_Action3(self):
+        global selected_sub
+        selected_sub = 3
+        self.attendence_frame.lift()
+
+    def select_sub_frame_Action4(self):
+        global selected_sub
+        selected_sub = 1
+        self.attendence_frame.lift()
+
+    def select_sub_frame_Action5(self):
+        global selected_sub
+        selected_sub = 1
+        self.attendence_frame.lift()
+    
     def add_sub_from_str(self,sub_str):
         sub_lst  = sub_str.split(',')
-        for item in sub_lst:
-            self.add_subject_button(item)
+        b1 = tk.Button(self.select_sub_frame, text=sub_lst[0], command=self.select_sub_frame_Action1)
+        b1.pack(side="top", fill="both", expand=True)
+        b1 = tk.Button(self.select_sub_frame, text=sub_lst[1], command=self.select_sub_frame_Action2)
+        b1.pack(side="top", fill="both", expand=True)
+        b1 = tk.Button(self.select_sub_frame, text=sub_lst[2], command=self.select_sub_frame_Action3)
+        b1.pack(side="top", fill="both", expand=True)
+        b1 = tk.Button(self.select_sub_frame, text=sub_lst[3], command=self.select_sub_frame_Action4)
+        b1.pack(side="top", fill="both", expand=True)
+        b1 = tk.Button(self.select_sub_frame, text=sub_lst[4], command=self.select_sub_frame_Action5)
+        b1.pack(side="top", fill="both", expand=True)
 
     def add_subbmit_but(self):
         sub_but = tk.Button(self.subbmit_button_frame,text = "Subbmit",command = self.get_todays_attendence)
@@ -259,10 +288,11 @@ class MainView(object):
 
     def get_todays_attendence(self):
         global todays_attendance
+        global selected_sub
         todays_attendance.sort()
         todays_attendance_copy = [str(x) for x in todays_attendance]
         csv_attn = ','.join(todays_attendance_copy)
-        print(csv_attn)
+        self.process.take_attendence(csv_attn,selected_sub)
         self.root.destroy()
 
     def get_student_info_Action(self):
@@ -281,13 +311,15 @@ class MainView(object):
 
     def search_Action(self):
         roll = self.e1.get()
-        #will go for database action here
-        first_name = 'XXXX'
-        last_name = 'XXXX'
-        mail = 'XXXX'
-        dob = 'XXXX'
+        tup = self.process.give_info_of_student(roll)
+        first_name = tup[1]
+        last_name = tup[2]
+        mail = tup[3]
+        dob = tup[4]
 
-        info = tk.Toplevel(root)
+        info = tk.Frame(root)
+        info.place(in_ = self.container , x=0, y=0, relwidth=1, relheight=1)
+        
         tk.Label(info , text = 'Roll Number').grid(row = 0 , column = 0)
         tk.Label(info , text = roll).grid(row = 0 , column  = 1)
         tk.Label(info , text = 'First Name').grid(row = 1 , column = 0)
@@ -298,7 +330,10 @@ class MainView(object):
         tk.Label(info , text = mail).grid(row = 3 , column  = 1)
         tk.Label(info , text = 'Date of Birth').grid(row = 4 , column = 0)
         tk.Label(info , text = dob).grid(row = 4 , column  = 1)
-
+        
+        quit_button = tk.Button(info , text = 'Quit' , command = info.destroy)
+        quit_button.grid(row = 5 , column = 0)
+        
     def Check_Attendence_of_given_day_Action(self):
         self.get_date_frame = tk.Frame(root)
         self.get_date_frame.place(in_ = self.container , x=0, y=0, relwidth=1, relheight=1)
@@ -314,23 +349,44 @@ class MainView(object):
 
     def search_Date_Action(self):
         #will go for database action here
-        pass
+        date1 = self.e1.get()
+        presenty = self.process.get_attendence_of_day(date1)
+        
+        presenty_of_given_date = tk.Frame(root)
+        presenty_of_given_date.place(in_ = self.container , x=0, y=0, relwidth=1, relheight=1)
+        i = 0
+        for item in presenty:
+            tk.Label(presenty_of_given_date , text = str(item[1])+'-->'+item[0]).grid(row = i)
+            i+=1
+        quit_button = tk.Button(presenty_of_given_date , text = 'Quit' , command = presenty_of_given_date.destroy)
+        quit_button.grid(row = i , column = 0)
+
+    def Sub_wise_report_Action(self):
+        dates_frame = tk.Frame(root)
+        dates_frame.place(in_ = self.container , x=0, y=0, relwidth=1, relheight=1)
+        tk.Label(dates_frame,text = 'Enetr starting and final dates (yyyy/mm/dd) for making report').grid(row = 0)
+        tk.Label(dates_frame,text = 'Starting Date : ').grid(row = 1 , column = 0)
+        tk.Label(dates_frame,text = 'Ending Date : ').grid(row = 2 , column = 0)
+        tk.Label(dates_frame,text = 'Sub Id : ').grid(row = 3 , column = 0)
+        self.e1 = tk.Entry(dates_frame)
+        self.e2 = tk.Entry(dates_frame)
+        self.e3 = tk.Entry(dates_frame)
+        self.e1.grid(row = 1 , column = 1)
+        self.e2.grid(row = 2 , column = 1)
+        self.e3.grid(row = 3 , column = 1)
+        gen_graph = tk.Button(dates_frame,text = 'generate_graph' , command = self.gen_graphAction)
+        gen_graph.grid(row = 4 , column = 0)
+        quit_button = tk.Button(dates_frame , text = 'Quit' , command = dates_frame.destroy)
+        quit_button.grid(row = 5 , column = 0)
+
+    def gen_graphAction(self):
+        day1 = self.e1.get()
+        day2 = self.e2.get()
+        sub = self.e3.get()
+        self.process.sub_wise_weekly_report(day1,day2,sub)
 
 
-    def Sub_wise_weekly_report_Action(self):
-        #will go for database action here
-        pass
-
-
-    def Sub_wise_monthly_report_Action(self):
-        #will go for database action here
-        pass
-
-
-
-
-
-
+root = tk.Tk()
 window = MainView(root)
 root.geometry('450x480')
 window.add_menubar()
