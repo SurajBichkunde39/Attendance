@@ -30,6 +30,7 @@ class Processing(object):
         pass
 
     def sub_wise_weekly_report(self , date1, date2 , sub_id1):
+        # print(date1, date2 , sub_id1)
         query = 'SELECT p_date , total_presenty , sub_id FROM  attendence WHERE sub_id = %s AND p_date >= %s AND p_date <= %s '
         values = (sub_id1,date1,date2)
         self.mycursor.execute(query,values)
@@ -39,9 +40,13 @@ class Processing(object):
             #print(item[1])
             x.append(item[0])
             y.append(item[1])
-        print(x)
-        print(y)
-        plt.bar(x,y)
+        # print(y)
+        # print(x)
+        temp_x = [x for x in range(1,len(y)+1)]
+        plt.bar(temp_x,y)
+        plt.xlabel('ith day in given interval')
+        plt.ylabel('total presenty')
+        plt.title('Attendance Report')
         plt.show()
         
     def give_info_of_student(self,roll_no):
@@ -60,7 +65,7 @@ class Processing(object):
         value = (roll_no,)
         self.mycursor.execute(query,value)
         self.mydb.commit()
-    def update_student_info(self,roll_no,first_name,last_name,dob,mail):
+    def update_student_info(self,roll_no,first_name,last_name,mail,dob):
         new_info = [roll_no,first_name,last_name,dob,mail]
         orignal_info = self.give_info_of_student(roll_no)
         changing_tup = []
@@ -83,7 +88,11 @@ class Processing(object):
             attens.append((item[0],item[1]))
         return attens
     
-        
+    
+    def give_total_number_of_student(self):
+        self.mycursor.execute('SELECT COUNT(*) FROM student')
+        for item in self.mycursor:
+            return item[0]
         
 if __name__ == '__main__':
     

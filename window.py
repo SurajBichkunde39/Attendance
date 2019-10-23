@@ -25,7 +25,7 @@ class Roll_number:
             self.Button1 = tk.Button(self.master, text="   {}   ".format(str(self.roll)), command = self.change_color,bg="Black", fg="White")
             
         else:
-            self.Button1 = tk.Button(self.master, text="   {}   ".format(str(self.roll)), command = self.change_color,bg="red", fg="White")
+            self.Button1 = tk.Button(self.master, text="   {}   ".format(str(self.roll)), command = self.change_color,bg="green", fg="White")
         self.Button1.grid(row=self.row, column=self.col)
         self.Button1.config(height =3, width = 5)
         
@@ -141,16 +141,16 @@ class MainView(object):
         first = self.e1.get()
         last = self.e2.get()
         mail = self.e3.get()
-        dob = self.e3.get()
-        #will go for database action here
-        print(roll_no,first,last,mail,dob)
+        dob = self.e4.get()
+        # print(roll_no,first,last,mail,dob)
+        self.process.update_student_info(roll_no,first,last,mail,dob)
         self.edit_student_frame.destroy()
 
 
     def remove_stud_Action(self):
-        #will go for database action here
         roll_no = self.e0.get()
-        print(roll_no)
+        self.process.remove_student(roll_no)
+        # print(roll_no)
         self.Remove_student_frame.destroy()
 
     def add_stud_Action(self):
@@ -158,9 +158,9 @@ class MainView(object):
         first = self.e1.get()
         last = self.e2.get()
         mail = self.e3.get()
-        dob = self.e3.get()
-        #will go for database action here
-        print(roll_no,first,last,mail,dob)
+        dob = self.e4.get()
+        # roll_no,first,last,dob,mail
+        self.process.add_student(roll_no,first,last,dob,mail)
         self.add_student_frame.destroy()
 
     def fill_button_frame(self):
@@ -280,7 +280,9 @@ class MainView(object):
         sub_but = tk.Button(self.subbmit_button_frame,text = "Subbmit",command = self.get_todays_attendence)
         sub_but.pack(side="top", fill="both", expand=True)
 
-    def add_attendence_sheet(self , number_of_student):
+    def add_attendence_sheet(self):
+        #make the database call to get how many students are there
+        number_of_student = self.process.give_total_number_of_student()
         for i in range(1,number_of_student+1):
             cap = Roll_number(self.roll_numbers_frame,i)
             cap.add_but()
@@ -314,8 +316,8 @@ class MainView(object):
         tup = self.process.give_info_of_student(roll)
         first_name = tup[1]
         last_name = tup[2]
-        mail = tup[3]
-        dob = tup[4]
+        mail = tup[4]
+        dob = tup[3]
 
         info = tk.Frame(root)
         info.place(in_ = self.container , x=0, y=0, relwidth=1, relheight=1)
@@ -367,7 +369,7 @@ class MainView(object):
         tk.Label(dates_frame,text = 'Enetr starting and final dates (yyyy/mm/dd) for making report').grid(row = 0)
         tk.Label(dates_frame,text = 'Starting Date : ').grid(row = 1 , column = 0)
         tk.Label(dates_frame,text = 'Ending Date : ').grid(row = 2 , column = 0)
-        tk.Label(dates_frame,text = 'Sub Id : ').grid(row = 3 , column = 0)
+        tk.Label(dates_frame,text = 'Sub Name : ').grid(row = 3 , column = 0)
         self.e1 = tk.Entry(dates_frame)
         self.e2 = tk.Entry(dates_frame)
         self.e3 = tk.Entry(dates_frame)
@@ -383,14 +385,24 @@ class MainView(object):
         day1 = self.e1.get()
         day2 = self.e2.get()
         sub = self.e3.get()
-        self.process.sub_wise_weekly_report(day1,day2,sub)
+        
+        sub = sub.upper()
+        s_id = self.get_sub_id(sub)
+        self.process.sub_wise_weekly_report(day1,day2,s_id)
 
+    def get_sub_id(self , substr):
+        with open('subject_info.txt' , 'r') as f:
+            for item in f.readlines():
+                if substr in item:
+                    return int(item.split(',')[0])
 
-root = tk.Tk()
-window = MainView(root)
-root.geometry('450x480')
-window.add_menubar()
-sub_str = 'SEPM,ISEE,TOC,CN,DBMS'
-window.add_sub_from_str(sub_str)
-window.add_attendence_sheet(16)
-root.mainloop()
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.title('AMV')
+    window = MainView(root)
+    root.geometry('685x550')
+    window.add_menubar()
+    sub_str = 'SEPM,ISEE,TOC,CN,DBMS'
+    window.add_sub_from_str(sub_str)
+    window.add_attendence_sheet()
+    root.mainloop()
